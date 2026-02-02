@@ -1,0 +1,102 @@
+
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<meta name='viewport' content='width=device-width, initial-scale=1.0'>
+<title>Minerva Weekly Ultra-Compact Timesheet</title>
+<style>
+ body { font-family: Arial; margin: 10px; }
+ h2 { color: #006fbe; text-align:center; }
+ .row { display:flex; justify-content:space-between; margin-bottom:8px; }
+ label { font-size:14px; }
+ input { width:70px; padding:4px; }
+ .wide { width:160px; }
+ .total { font-weight:bold; color:#e75b2b; }
+ .sigbox { width:100%; height:80px; border:1px solid #006fbe; border-radius:6px; }
+</style>
+<script>
+function calc(){
+ let days=['mon','tue','wed','thu','fri'];
+ let weekly=0;
+ days.forEach(d=>{
+   let s=document.getElementById(d+'_start').value;
+   let f=document.getElementById(d+'_finish').value;
+   let b=parseFloat(document.getElementById(d+'_break').value)||0;
+   if(s && f){
+      let sh=parseInt(s.split(':')[0]); let sm=parseInt(s.split(':')[1]);
+      let fh=parseInt(f.split(':')[0]); let fm=parseInt(f.split(':')[1]);
+      let mins=(fh*60+fm)-(sh*60+sm)-b;
+      let hrs=mins/60;
+      if(hrs>0){
+         document.getElementById(d+'_total').value=hrs.toFixed(2);
+         weekly+=hrs;
+      }
+   }
+ });
+ document.getElementById('weekly_total').value=weekly.toFixed(2);
+}
+</script>
+</head>
+<body>
+<h2>Minerva Weekly Ultra‑Compact Timesheet</h2>
+<div class='row'><label>Engineer:</label><input class='wide' id='eng'></div>
+<div class='row'><label>Week Starting:</label><input class='wide' id='week'></div>
+<h3 style='color:#e75b2b;'>Hours (Mon–Fri)</h3>
+
+<div class='row'><b>Mon</b>
+ Start:<input type='time' id='mon_start' onchange='calc()'>
+ Finish:<input type='time' id='mon_finish' onchange='calc()'>
+ Break:<input type='number' id='mon_break' onchange='calc()' style='width:60px;'>
+ Total:<input id='mon_total' class='total' readonly>
+</div>
+
+<div class='row'><b>Tue</b>
+ Start:<input type='time' id='tue_start' onchange='calc()'>
+ Finish:<input type='time' id='tue_finish' onchange='calc()'>
+ Break:<input type='number' id='tue_break' onchange='calc()' style='width:60px;'>
+ Total:<input id='tue_total' class='total' readonly>
+</div>
+
+<div class='row'><b>Wed</b>
+ Start:<input type='time' id='wed_start' onchange='calc()'>
+ Finish:<input type='time' id='wed_finish' onchange='calc()'>
+ Break:<input type='number' id='wed_break' onchange='calc()' style='width:60px;'>
+ Total:<input id='wed_total' class='total' readonly>
+</div>
+
+<div class='row'><b>Thu</b>
+ Start:<input type='time' id='thu_start' onchange='calc()'>
+ Finish:<input type='time' id='thu_finish' onchange='calc()'>
+ Break:<input type='number' id='thu_break' onchange='calc()' style='width:60px;'>
+ Total:<input id='thu_total' class='total' readonly>
+</div>
+
+<div class='row'><b>Fri</b>
+ Start:<input type='time' id='fri_start' onchange='calc()'>
+ Finish:<input type='time' id='fri_finish' onchange='calc()'>
+ Break:<input type='number' id='fri_break' onchange='calc()' style='width:60px;'>
+ Total:<input id='fri_total' class='total' readonly>
+</div>
+
+<h3 style='color:#e75b2b;'>Weekly Total</h3>
+<input id='weekly_total' class='total' readonly style='width:90px;'>
+
+<h3 style='color:#006fbe;'>Engineer Signature</h3>
+<canvas id='sig' class='sigbox'></canvas>
+<script>
+var canvas=document.getElementById('sig');
+var ctx=canvas.getContext('2d');
+var drawing=false;
+canvas.addEventListener('touchstart',e=>{drawing=true;});
+canvas.addEventListener('touchend',e=>{drawing=false;});
+canvas.addEventListener('touchmove',e=>{
+ if(!drawing)return;
+ var r=canvas.getBoundingClientRect();
+ var x=e.touches[0].clientX-r.left;
+ var y=e.touches[0].clientY-r.top;
+ ctx.fillStyle='#000';
+ ctx.fillRect(x,y,2,2);
+});
+</script>
+
+</body></html>
